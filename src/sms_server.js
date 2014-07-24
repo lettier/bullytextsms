@@ -4,15 +4,19 @@
  * 
 */
 
-var http    = require("http");
-var mongojs = require("mongojs");
-var qs      = require('querystring');
+var http    = require( "http"        );
+var mongojs = require( "mongojs"     );
+var qs      = require( "querystring" );
+
+// Connect to the bullytextsms database.
 
 var uri = "mongodb://localhost:27017/bullytextsms";
 
+// Select the two collections.
+
 var db = { 
 
-	users: mongojs.connect( uri, [ "sms_users" ]    ),
+	users: mongojs.connect( uri, [ "sms_users"    ] ),
 	msgs:  mongojs.connect( uri, [ "sms_messages" ] )
 
 };
@@ -20,10 +24,16 @@ var db = {
 function request_handler( request, response ) 
 {
 
+	// An HTTP reponse.
+	
 	response.writeHead( 200, { "Content-Type": "text/html" } );
+	
+	// Responed to POST requests.
 	
 	if ( request.method == "POST" ) 
 	{
+		
+		// Gather the POST body.
 		
 		var body = "";
 		
@@ -31,7 +41,7 @@ function request_handler( request, response )
 			
 			body += data;
 
-			// Too much POST data, kill the connection!
+			// Avoid large POST bodies.
 			
 			if ( body.length > 1e6 )
 			{
@@ -45,8 +55,8 @@ function request_handler( request, response )
 		request.on( "end", function ( ) {
 			
 			var post    = qs.parse( body );
-			var uid     = post[ "uid"     ];
-			var message = post[ "message" ];
+			var uid     = post[ "uid"     ]; // Get the unique identifier.
+			var message = post[ "message" ]; // Get the message.
 			
 			db.msgs.sms_messages.find( { "name": message.toString( ).toLowerCase( ) }, function( error, records ) {
 			
@@ -64,9 +74,13 @@ function request_handler( request, response )
 				if ( records.length != 0 )
 				{
 				
+					// Should only be one record.
+					
 					response.write( records[ 0 ].message );
 					
 				}
+				
+				// Finish the server HTTP response.
 				
 				response.end( );
 				
@@ -78,6 +92,8 @@ function request_handler( request, response )
 	
 }
 
+// Start the server without the frontend.
+
 var sms_server = http.createServer( request_handler );
 
 var port_number = 8881;
@@ -88,4 +104,4 @@ sms_server.listen( port_number, function( ) {
 
 } );
 
-module.exports.request_handler = request_handler;
+module.exports.request_handler = request_handler; // For use in file_handler.js.

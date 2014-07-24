@@ -6,7 +6,7 @@
 
 $( document ).ready( function ( ) {
 	
-	var keywords = [ "BOYS", "GIRLS", "CONVO", "LISTEN", "ALEX", "SAM", "WALK", "STEP" ];
+	var keywords = [ "BOYS", "GIRLS", "CONVO", "LISTEN", "ALEX", "SAM", "WALK", "STEP", "TALK" ];
 	
 	function update_input_elements( ) 
 	{
@@ -17,7 +17,7 @@ $( document ).ready( function ( ) {
 		
 		$( "#phone_screen" ).append( response_box );
 		
-		var submit_button = $( "#submit_button" ); //[ 0 ].outerHTML;
+		var submit_button = $( "#submit_button" );
 		
 		$( "#submit_button" ).remove( );
 		

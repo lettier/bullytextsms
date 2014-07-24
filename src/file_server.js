@@ -4,11 +4,10 @@
  * 
 */
 
-var http = require("http");
-
-var   fs = require("fs");
-var  url = require("url");
-var path = require("path");
+var http    = require( "http"    );
+var   fs    = require( "fs"      );
+var  url    = require( "url"     );
+var path    = require( "path"    );
 
 var sms_server = require("./sms_server");
 
@@ -23,6 +22,8 @@ var content_types = {
 function file_handler( request, response )
 {
 	
+	var cookie = request.headers.cookie;
+	
 	if ( request.method == "POST" ) 
 	{
 		
@@ -32,14 +33,14 @@ function file_handler( request, response )
 		
 	}
 	
-	
 	var uri      = url.parse( request.url ).pathname;
 	
 	var filename = path.join( __dirname, uri );
 	
 	fs.exists( filename, function ( exists ) {
 		
-		// if root directory, append test.html
+		// IF GET / add index.html to filepath.
+		
 		if ( fs.statSync( filename ).isDirectory( ) ) 
 		{
 			
@@ -57,7 +58,7 @@ function file_handler( request, response )
 			if ( error ) 
 			{
 				
-				response.writeHead( 404, {'Content-type:': 'text/plain'} );
+				response.writeHead( 404, { "Content-type": "text/plain" } );
 				response.write( error + "\n" );
 				response.end();
 			
@@ -65,9 +66,17 @@ function file_handler( request, response )
 			else 
 			{
 				
-				response.setHeader( 'Content-Type:', content_type );
+				response.setHeader( "Content-Type", content_type );
+				
+				if ( cookie == undefined )
+				{
+					
+					response.setHeader( "Set-Cookie", "uid=" + Math.floor( Math.random( ) * 100000 ).toString( ) );
+					
+				}
+				
 				response.writeHead( 200 );
-				response.write( file );
+				response.write( file );				
 				response.end( );
 				
 			}
