@@ -81,7 +81,7 @@ function file_handler( request, response )
 				{
 					
 					// The session expires after one minute.
-					// Once the session expires, they will be greated with the beginning scene.
+					// Once the session expires, they will be greeted with the beginning scene.
 					// During the session, the server continues along the story line.
 					
 					response.setHeader( "Set-Cookie", "session_id=" + Math.floor( Math.random( ) * 10000000000 ).toString( ) + "; Expires=" + new Date( new Date( ).getTime( ) + 1 * 60000) );

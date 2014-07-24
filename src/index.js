@@ -82,7 +82,7 @@ $( document ).ready( function ( ) {
 				if ( msg !== "" )
 				{
 				
-					// Bold the keywords, the user needs to text back, in the messsage.
+					// Bold the keywords, the user needs to text back, in the message.
 					
 					var i = keywords.length;
 					

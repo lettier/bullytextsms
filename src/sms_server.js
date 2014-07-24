@@ -213,7 +213,7 @@ function request_handler( request, response )
 					function next_state_valid( current_state, next_state )
 					{
 						
-						// Validate that the input is the correct reponse to the user's current state.
+						// Validate that the input is the correct response to the user's current state.
 						
 						var next_states = state_graph[ current_state ];
 						
@@ -306,7 +306,7 @@ function request_handler( request, response )
 						
 					}
 					
-					// Send the appropriate message and finish the reponse.
+					// Send the appropriate message and finish the response.
 					
 					send_message( name, message );
 					
@@ -328,7 +328,7 @@ function request_handler( request, response )
 	
 }
 
-// Start the server without the frontend.
+// Start the server without the front-end.
 
 var sms_server = http.createServer( request_handler );
 
