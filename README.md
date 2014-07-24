@@ -6,7 +6,9 @@ A [DoSomething.org](https://www.dosomething.org) code screen.
 
 Dependencies includes Node.js and MongoDB.  
 
-To test:  
+Once the user visits the front-end simulator, a session is created for one minute via a cookie. The user can send the SMS server text messages. If the input is valid, the user will receive the next appropriate SMS text message from the SMS server.
+
+To run:  
 `$ node ./src/file_server.js`  
 Browser: `http://localhost:8888`  
 
