@@ -18,7 +18,8 @@ var content_types = {
     ".html": "text/html",
     ".css":  "text/css",
     ".js":   "application/javascript",
-    ".txt":  "text/plain"
+    ".txt":  "text/plain",
+    ".ico":  "image/x-icon"
     
 };
 
