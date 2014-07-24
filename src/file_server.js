@@ -11,7 +11,7 @@ var   fs    = require( "fs"      );
 var  url    = require( "url"     );
 var path    = require( "path"    );
 
-var sms_server = require("./sms_server");
+var sms_server = require( "./sms_server" );
 
 var content_types = {
 	
@@ -19,6 +19,7 @@ var content_types = {
     ".css":  "text/css",
     ".js":   "application/javascript",
     ".txt":  "text/plain"
+    
 };
 
 function file_handler( request, response )

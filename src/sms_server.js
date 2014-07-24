@@ -10,11 +10,9 @@ var http    = require( "http"        );
 var mongojs = require( "mongojs"     );
 var qs      = require( "querystring" );
 
-// Connect to the bullytextsms database.
-
 var uri = "mongodb://localhost:27017/bullytextsms";
 
-// Select the two collections.
+// Connect to the bullytextsms database and select the two collections.
 
 var db = { 
 
@@ -67,6 +65,7 @@ function request_handler( request, response )
 				console.log( "UID and/or message not set." );
 				
 				// The UID and the message were not set in the request.
+				// Send them scene one.
 				
 				db.msgs.sms_messages.find( { "name": "scene1" }, function( error, records ) {
 					
@@ -115,6 +114,7 @@ function request_handler( request, response )
 				{
 					
 					// User not found.
+					// Send them scene one.
 					
 					db.users.sms_users.insert( { "name": uid, "state": state }, function ( ) { } );
 					
@@ -213,7 +213,7 @@ function request_handler( request, response )
 					function next_state_valid( current_state, next_state )
 					{
 						
-						// Validate the input is the correct reponse to the user's current state.
+						// Validate that the input is the correct reponse to the user's current state.
 						
 						var next_states = state_graph[ current_state ];
 						
@@ -316,6 +316,14 @@ function request_handler( request, response )
 			
 		} );			
 	
+	}
+	else
+	{
+		
+		// GET request.
+		
+		response.end( );
+		
 	}
 	
 }

@@ -15,7 +15,7 @@ $( document ).ready( function ( ) {
 	function check_input( message )
 	{
 		
-		// Validate user input agains the keywords.
+		// Validate user input against the keywords.
 		
 		var i = keywords.length;
 		
@@ -53,9 +53,9 @@ $( document ).ready( function ( ) {
 	function update_input_elements( ) 
 	{
 		
-		// Move the input text box and the bottom to the bottom of the phone screen.
+		// Move the input text box and the button to the bottom of the phone screen.
 		
-		var response_box = $( "#response_box" )[ 0 ].outerHTML;
+		var response_box  = $( "#response_box" )[ 0 ].outerHTML;
 			
 		$( "#response_box" ).remove( );
 		
