@@ -2,14 +2,58 @@
  * David Lettier (C) 2014.
  * http://www.lettier.com/
  * 
+ * The front-end simulator logic.
+ * 
 */
 
 $( document ).ready( function ( ) {
 	
 	var keywords = [ "BOYS", "GIRLS", "CONVO", "LISTEN", "ALEX", "SAM", "WALK", "STEP", "TALK" ];
 	
+	var cookie_data = document.cookie;
+	
+	function check_input( message )
+	{
+		
+		// Validate user input agains the keywords.
+		
+		var i = keywords.length;
+		
+		var keyword = false;
+		
+		while ( i-- )
+		{
+			
+			if ( message.toUpperCase( ).indexOf( keywords[ i ] ) !== -1 )
+			{
+				
+				keyword = keywords[ i ];
+				
+				break;
+				
+			}
+			
+		}
+		
+		if ( keyword !== false )
+		{
+			
+			return keyword;
+			
+		}
+		else
+		{
+		
+			return false;
+			
+		}
+		
+	}
+	
 	function update_input_elements( ) 
 	{
+		
+		// Move the input text box and the bottom to the bottom of the phone screen.
 		
 		var response_box = $( "#response_box" )[ 0 ].outerHTML;
 			
@@ -25,14 +69,14 @@ $( document ).ready( function ( ) {
 		
 	}
 	
-	function get_sms_message( uid, message )
+	function get_sms_message( message )
 	{
 		
 		$.ajax( {
 			
 			type: "POST",
-			url: "sms_server.js",
-			data: { uid: uid.toString( ), message: message },
+			url:  "http://localhost:8888/sms_server.js",
+			data: { uid: cookie_data.split( "=" )[ 1 ], message: message.toLowerCase( ) },
 			success: function( msg ) {
 				
 				if ( msg !== "" )
@@ -84,9 +128,20 @@ $( document ).ready( function ( ) {
 			
 		}
 		
-		$( "#phone_screen" ).append( "<span class='text_message text_message_out'>" + user_input + "</span>" );		 
+		$( "#phone_screen" ).append( "<span class='text_message text_message_out'>" + user_input + "</span>" );
+		
+		var message = check_input( user_input );
+		
+		if ( message === false )
+		{
+			
+			update_input_elements( );
+			
+			return false;
+			
+		}
 
-		get_sms_message( 0, user_input );
+		get_sms_message( message );
 		
 		update_input_elements( );
 		
@@ -115,6 +170,6 @@ $( document ).ready( function ( ) {
 		
 	} );
 	
-	get_sms_message( 0, "scene1" );	
+	get_sms_message( "scene1" );	
 	
 } );

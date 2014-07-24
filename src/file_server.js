@@ -2,6 +2,8 @@
  * David Lettier (C) 2014.
  * http://www.lettier.com/
  * 
+ * File server for the front-end simulator.
+ * 
 */
 
 var http    = require( "http"    );
@@ -22,37 +24,41 @@ var content_types = {
 function file_handler( request, response )
 {
 	
-	var cookie = request.headers.cookie;
+	var cookie            = request.headers.cookie;
 	
-	if ( request.method == "POST" ) 
+	var uri               = url.parse( request.url ).pathname;
+	
+	var filename_and_path = path.join( __dirname, uri );
+	
+	console.log( uri, filename_and_path )
+	
+	if ( request.method === "POST" && uri === "/sms_server.js" ) 
 	{
 		
 		sms_server.request_handler( request, response );
 		
-		return;
+		return true;
 		
-	}
+	}	
 	
-	var uri      = url.parse( request.url ).pathname;
-	
-	var filename = path.join( __dirname, uri );
-	
-	fs.exists( filename, function ( exists ) {
+	fs.exists( filename_and_path, function ( exists ) {
 		
 		// IF GET / add index.html to filepath.
 		
-		if ( fs.statSync( filename ).isDirectory( ) ) 
+		if ( fs.statSync( filename_and_path ).isDirectory( ) ) 
 		{
 			
-			filename += 'index.html';
+			filename_and_path += 'index.html';
 			
 		}
 		
-		// Get MIME type based on file extension.
+		// Get the MIME type based on the file extension.
 		
-		var content_type = content_types[ path.extname( filename ) ];
+		var content_type = content_types[ path.extname( filename_and_path ) ];
 		
-		fs.readFile( filename, function( error, file ) {
+		// Read in the file.
+		
+		fs.readFile( filename_and_path, function( error, file ) {
 			
 
 			if ( error ) 
@@ -68,12 +74,20 @@ function file_handler( request, response )
 				
 				response.setHeader( "Content-Type", content_type );
 				
-				if ( cookie == undefined )
+				// Set a cookie to establish a session.
+				
+				if ( cookie === undefined )
 				{
 					
-					response.setHeader( "Set-Cookie", "uid=" + Math.floor( Math.random( ) * 100000 ).toString( ) );
+					// The session expires after one minute.
+					// Once the session expires, they will be greated with the beginning scene.
+					// During the session, the server continues along the story line.
+					
+					response.setHeader( "Set-Cookie", "session_id=" + Math.floor( Math.random( ) * 10000000000 ).toString( ) + "; Expires=" + new Date( new Date( ).getTime( ) + 1 * 60000) );
 					
 				}
+				
+				// Write the HTTP header, the file, and then end the response;
 				
 				response.writeHead( 200 );
 				response.write( file );				
@@ -84,6 +98,8 @@ function file_handler( request, response )
 	});
 	
 }
+
+// Start the server.
 
 var file_server = http.createServer( file_handler );
 

@@ -2,6 +2,8 @@
  * David Lettier (C) 2014.
  * http://www.lettier.com/
  * 
+ * Populates the SMS messages database.
+ * 
 */
 
 var mongojs = require( "mongojs" );
@@ -10,7 +12,11 @@ var db = mongojs.connect( "mongodb://localhost:27017/bullytextsms" );
 
 sms_msgs = db.collection( "sms_messages" );
 
+// Clear out the database collection.
+
 sms_msgs.remove( function ( ) { } );
+
+// Load all of the scenes into the database collection.
 
 sms_msgs.insert( {"name":"scene1","message":"You arrive at school and get ur schedule. AH! Gym first period! Head to the locker room to get ready. Do you use the BOYS or GIRLS locker room?" }, function ( ) { } );
 
