@@ -92,7 +92,7 @@ function file_handler( request, response )
 					response.setHeader( "Set-Cookie", "session_id=" 
 					+ Math.floor( Math.random( ) * 10000000000 ).toString( )
 					+ "; path=/"
-					+ "; domain=localhost:8888"
+					+ "; domain="
 					+ "; expires=" + date
 					);
 					

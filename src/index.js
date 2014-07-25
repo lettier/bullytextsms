@@ -12,8 +12,12 @@ $( document ).ready( function ( ) {
 	
 	var cookie_data = document.cookie;
 	
-	// document.cookie returns "" on Chromium/Chrome. 
-	// To circumvent this just create a client-side UID.
+	// document.cookie returns "" on Chromium/Chrome even though 
+	// the network cookie tab shows that there is a cookie.
+	// Setting domain=<blank> in the header fixed this issue.
+	// http://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain
+	// https://code.google.com/p/chromium/issues/detail?id=56211
+	// To circumvent this, just create a client-side UID.
 	
 	if ( cookie_data == "" ) 
 	{
