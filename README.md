@@ -9,7 +9,7 @@ Dependencies include Node.js and MongoDB.
 Once the user visits the front-end simulator, a session is created for one minute via a cookie. The user can send the SMS server text messages. If the input is valid, the user will receive the next appropriate SMS text message from the SMS server.
 
 To run:  
-`$ node ./src/populate_db_sms_msgs.js`
+`$ node ./src/populate_db_sms_msgs.js`  
 `$ node ./src/file_server.js`  
 Browser: `http://localhost:8888`  
 
