@@ -12,6 +12,16 @@ $( document ).ready( function ( ) {
 	
 	var cookie_data = document.cookie;
 	
+	// document.cookie returns "" on Chromium/Chrome. 
+	// To circumvent this just create a client-side UID.
+	
+	if ( cookie_data == "" ) 
+	{
+		
+		cookie_data = "uid=" + Math.floor( Math.random( ) * 10000000000 ).toString( );
+		
+	}
+	
 	function check_input( message )
 	{
 		
