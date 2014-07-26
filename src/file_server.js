@@ -45,6 +45,21 @@ function file_handler( request, response )
 	
 	fs.exists( filename_and_path, function ( exists ) {
 		
+		// Does the file exist?
+		
+		if ( !exists )
+		{
+			
+			console.log( "File not found: ", filename_and_path );
+			
+			response.writeHead( 404, { "Content-type": "text/plain" } );
+			response.write( "File not found." );
+			response.end();
+			
+			return false;
+			
+		}
+		
 		// IF GET / add index.html to filepath.
 		
 		if ( fs.statSync( filename_and_path ).isDirectory( ) ) 
