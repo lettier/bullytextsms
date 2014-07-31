@@ -14,13 +14,6 @@ var uri = "mongodb://localhost:27017/bullytextsms";
 
 // Connect to the bullytextsms database and select the two collections.
 
-// var db = { 
-// 
-// 	users: mongojs.connect( uri, [ "sms_users"    ] ),
-// 	msgs:  mongojs.connect( uri, [ "sms_messages" ] )
-// 
-// };
-
 db = mongojs.connect( uri, [ "sms_users", "sms_messages" ] );
 
 function request_handler( request, response ) 
