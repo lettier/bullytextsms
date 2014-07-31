@@ -32,7 +32,7 @@ function file_handler( request, response )
 	
 	var filename_and_path = path.join( __dirname, uri );
 	
-	console.log( uri, filename_and_path )
+	console.log( uri, filename_and_path );
 	
 	if ( request.method === "POST" && uri === "/sms_server.js" ) 
 	{
@@ -104,11 +104,11 @@ function file_handler( request, response )
 					date.setTime( date.getTime( ) + ( 1 * 60 * 1000 ) );
 					date = date.toUTCString( );
 					
-					response.setHeader( "Set-Cookie", "session_id=" 
-					+ Math.floor( Math.random( ) * 10000000000 ).toString( )
-					+ "; path=/"
-					+ "; domain="
-					+ "; expires=" + date
+					response.setHeader( "Set-Cookie", "session_id=" + 
+						Math.floor( Math.random( ) * 10000000000 ).toString( ) +
+						"; path=/" +
+						"; domain=" +
+						"; expires=" + date
 					);
 					
 				}

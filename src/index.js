@@ -19,7 +19,7 @@ $( document ).ready( function ( ) {
 	// https://code.google.com/p/chromium/issues/detail?id=56211
 	// To circumvent this, just create a client-side UID.
 	
-	if ( cookie_data == "" ) 
+	if ( cookie_data === "" ) 
 	{
 		
 		cookie_data = "uid=" + Math.floor( Math.random( ) * 10000000000 ).toString( );

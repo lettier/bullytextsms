@@ -56,8 +56,8 @@ function request_handler( request, response )
 			
 			var post    = qs.parse( body );
 			
-			var uid     = post[ "uid"     ]; // Get the unique identifier.
-			var message = post[ "message" ]; // Get the message.
+			var uid     = post.uid; // Get the unique identifier.
+			var message = post.message; // Get the message.
 			
 			if ( uid === "" || uid === undefined || message === "" || message === undefined  )
 			{
@@ -80,7 +80,7 @@ function request_handler( request, response )
 						
 					}
 					
-					if ( records.length != 0 )
+					if ( records.length !== 0 )
 					{
 					
 						// Should only be one record.
@@ -131,7 +131,7 @@ function request_handler( request, response )
 							
 						}
 						
-						if ( records.length != 0 )
+						if ( records.length !== 0 )
 						{
 						
 							// Should only be one record.
@@ -171,114 +171,8 @@ function request_handler( request, response )
 						"talk":   [ null                    ]
 						
 					};
-	
-					function check_input( message )
-					{
-						
-						// Validate the input against the keywords.
-						
-						var i = keywords.length;
-						
-						var keyword = false;
-						
-						while ( i-- )
-						{
-							
-							if ( message.toLowerCase( ).indexOf( keywords[ i ] ) !== -1 )
-							{
-								
-								keyword = keywords[ i ];
-								
-								break;
-								
-							}
-							
-						}
-						
-						if ( keyword !== false )
-						{
-							
-							return keyword;
-							
-						}
-						else
-						{
-						
-							return false;
-							
-						}
-						
-					}
 					
-					function next_state_valid( current_state, next_state )
-					{
-						
-						// Validate that the input is the correct response to the user's current state.
-						
-						var next_states = state_graph[ current_state ];
-						
-						var i = next_states.length;
-						
-						var valid = false;
-						
-						while ( i-- )
-						{
-							
-							if ( next_state === next_states[ i ] )
-							{
-								
-								valid = true;
-								
-								break;
-								
-							}
-							
-						}
-						
-						return valid;
-						
-					}
-					
-					function send_message( name, message )
-					{
-						
-						// Send the user their next-state's message.
-						
-						db.msgs.sms_messages.find( { "name": message }, function( error, records ) {
-					
-							if ( error ) 
-							{
-								
-								console.log( "Database query error." );
-								
-								response.end( );
-								
-								return false;
-								
-							}
-							
-							if ( records.length != 0 )
-							{
-							
-								// Should only be one record.
-								
-								response.write( records[ 0 ].message );
-								
-							}
-							
-							// Update the user's current state.
-							
-							db.users.sms_users.update( { "name": name }, { $set: { "state": message } }, function ( ) { } );
-							
-							// Finish the server HTTP response.
-							
-							response.end( );
-							
-						} );
-						
-					}
-					
-					message = check_input( message );
+					message = check_input( message, keywords );
 					
 					if ( message === false )
 					{
@@ -287,20 +181,20 @@ function request_handler( request, response )
 						
 						// Resend the user their current state's message.
 						
-						send_message( name, state );
+						send_message( name, state, response );
 						
 						return false;
 						
 					}
 					
-					if ( !next_state_valid( state, message ) )
+					if ( !next_state_valid( state, message, state_graph ) )
 					{
 						
 						console.log( "Next state invalid." );
 						
 						// Resend the user their current state's message.
 						
-						send_message( name, state );
+						send_message( name, state, response );
 						
 						return false;
 						
@@ -308,7 +202,7 @@ function request_handler( request, response )
 					
 					// Send the appropriate message and finish the response.
 					
-					send_message( name, message );
+					send_message( name, message, response );
 					
 				}				
 				
@@ -341,3 +235,111 @@ sms_server.listen( port_number, function( ) {
 } );
 
 module.exports.request_handler = request_handler; // For use in file_handler.js.
+
+// Helper functions.
+
+function check_input( message, keywords )
+{
+	
+	// Validate the input against the keywords.
+	
+	var i = keywords.length;
+	
+	var keyword = false;
+	
+	while ( i-- )
+	{
+		
+		if ( message.toLowerCase( ).indexOf( keywords[ i ] ) !== -1 )
+		{
+			
+			keyword = keywords[ i ];
+			
+			break;
+			
+		}
+		
+	}
+	
+	if ( keyword !== false )
+	{
+		
+		return keyword;
+		
+	}
+	else
+	{
+		
+		return false;
+		
+	}
+	
+}
+
+function next_state_valid( current_state, next_state, state_graph )
+{
+	
+	// Validate that the input is the correct response to the user's current state.
+	
+	var next_states = state_graph[ current_state ];
+	
+	var i = next_states.length;
+	
+	var valid = false;
+	
+	while ( i-- )
+	{
+		
+		if ( next_state === next_states[ i ] )
+		{
+			
+			valid = true;
+			
+			break;
+			
+		}
+		
+	}
+	
+	return valid;
+	
+}
+
+function send_message( name, message, response )
+{
+	
+	// Send the user their next-state's message.
+	
+	db.msgs.sms_messages.find( { "name": message }, function( error, records ) {
+		
+		if ( error ) 
+		{
+			
+			console.log( "Database query error." );
+			
+			response.end( );
+			
+			return false;
+			
+		}
+		
+		if ( records.length !== 0 )
+		{
+			
+			// Should only be one record.
+			
+			response.write( records[ 0 ].message );
+			
+		}
+		
+		// Update the user's current state.
+		
+		db.users.sms_users.update( { "name": name }, { $set: { "state": message } }, function ( ) { } );
+		
+		// Finish the server HTTP response.
+		
+		response.end( );
+		
+	} );
+	
+}
