@@ -14,12 +14,14 @@ var uri = "mongodb://localhost:27017/bullytextsms";
 
 // Connect to the bullytextsms database and select the two collections.
 
-var db = { 
+// var db = { 
+// 
+// 	users: mongojs.connect( uri, [ "sms_users"    ] ),
+// 	msgs:  mongojs.connect( uri, [ "sms_messages" ] )
+// 
+// };
 
-	users: mongojs.connect( uri, [ "sms_users"    ] ),
-	msgs:  mongojs.connect( uri, [ "sms_messages" ] )
-
-};
+db = mongojs.connect( uri, [ "sms_users", "sms_messages" ] );
 
 function request_handler( request, response ) 
 {
@@ -67,7 +69,7 @@ function request_handler( request, response )
 				// The UID and the message were not set in the request.
 				// Send them scene one.
 				
-				db.msgs.sms_messages.find( { "name": "scene1" }, function( error, records ) {
+				db.sms_messages.find( { "name": "scene1" }, function( error, records ) {
 					
 					if ( error ) 
 					{
@@ -104,7 +106,7 @@ function request_handler( request, response )
 			
 			console.log( "User: " + uid, "Message: " + message );
 
-			db.users.sms_users.find( { "name": uid }, function ( error, records ) {				
+			db.sms_users.find( { "name": uid }, function ( error, records ) {				
 				
 				var name;
 				
@@ -116,9 +118,9 @@ function request_handler( request, response )
 					// User not found.
 					// Send them scene one.
 					
-					db.users.sms_users.insert( { "name": uid, "state": state }, function ( ) { } );
+					db.sms_users.insert( { "name": uid, "state": state }, function ( ) { } );
 					
-					db.msgs.sms_messages.find( { "name": state }, function( error, records ) {
+					db.sms_messages.find( { "name": state }, function( error, records ) {
 					
 						if ( error ) 
 						{
@@ -310,7 +312,7 @@ function send_message( name, message, response )
 	
 	// Send the user their next-state's message.
 	
-	db.msgs.sms_messages.find( { "name": message }, function( error, records ) {
+	db.sms_messages.find( { "name": message }, function( error, records ) {
 		
 		if ( error ) 
 		{
@@ -334,7 +336,7 @@ function send_message( name, message, response )
 		
 		// Update the user's current state.
 		
-		db.users.sms_users.update( { "name": name }, { $set: { "state": message } }, function ( ) { } );
+		db.sms_users.update( { "name": name }, { $set: { "state": message } }, function ( ) { } );
 		
 		// Finish the server HTTP response.
 		
