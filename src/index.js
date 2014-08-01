@@ -151,6 +151,8 @@ $( document ).ready( function ( ) {
 			
 			update_input_elements( );
 			
+			$( "#phone_screen" ).animate( { scrollTop: $( "#phone_screen")[ 0 ].scrollHeight }, 1000 );
+			
 			return false;
 			
 		}
